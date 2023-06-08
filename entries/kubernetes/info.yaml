@@ -1,0 +1,13 @@
+- projects:
+    kubernetes: true
+  level: 0
+  endDate: 2023-07-01 00:00:00 +00:00
+  item:
+    title: Update k8s.gcr.io to use registry.k8s.io
+    link:
+      href: https://registry.k8s.io
+    description: |
+      The k8s.gcr.io container registry is being deprecated in favor of registry.k8s.io. This is a breaking change for all Kubernetes users.
+    author:
+      name: Jeffrey Sica (@jeefy)
+      email: me@jeefy.dev
