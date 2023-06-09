@@ -18,8 +18,8 @@ const (
 type MOTDItem struct {
 	Projects  map[string]bool `json:"projects,omitempty" yaml:"projects,omitempty"`
 	Level     MOTDLevel       `json:"level,omitempty" yaml:"level"`
-	StartDate time.Time       `json:"start_date,omitempty" yaml:"start_date"`
-	EndDate   time.Time       `json:"end_date,omitempty" yaml:"end_date,omitempty"`
+	StartDate time.Time       `json:"start_date,omitempty" yaml:"startDate"`
+	EndDate   time.Time       `json:"end_date,omitempty" yaml:"endDate,omitempty"`
 	Item      feeds.Item      `json:"item" yaml:"item"`
 }
 
@@ -29,9 +29,20 @@ func (m MOTDItems) Filter(projects []string, level MOTDLevel) MOTDItems {
 	var filtered MOTDItems
 
 	for _, item := range m {
-		if (!item.StartDate.IsZero() && item.StartDate.Before(time.Now())) || item.EndDate.After(time.Now()) {
+		if !item.StartDate.IsZero() && time.Now().Before(item.StartDate) {
 			if args.debug {
-				log.Printf("Skipping item %s because it is not in the date range", item.Item.Title)
+				log.Printf("Skipping item %s because it is not yet at the start date", item.Item.Title)
+			}
+			continue
+		}
+		if item.EndDate.IsZero() {
+			if args.debug {
+				log.Printf("No end date is set for %s, skipping", item.Item.Title)
+			}
+			continue
+		} else if time.Now().After(item.EndDate) {
+			if args.debug {
+				log.Printf("Skipping item %s because it is past the end date", item.Item.Title)
 			}
 			continue
 		}
