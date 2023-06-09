@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/gorilla/feeds"
@@ -18,14 +17,11 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	motdRequests.Inc()
 
 	projects := strings.Split(r.URL.Query().Get("projects"), ",")
-	level := r.URL.Query().Get("level")
-	intVar, err := strconv.Atoi(level)
-	if err != nil {
-		intVar = 0
-	}
+	level := MOTDLevel(r.URL.Query().Get("level"))
 
-	for _, entry := range fullFeed.Filter(projects, MOTDLevel(intVar)) {
+	for _, entry := range fullFeed.Filter(projects, level) {
 		motdServed.Inc()
+		entry.Item.Content = string(entry.Level)
 		feed.Add(&entry.Item)
 	}
 

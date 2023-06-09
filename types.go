@@ -7,13 +7,27 @@ import (
 	"github.com/gorilla/feeds"
 )
 
-type MOTDLevel int
+type MOTDLevel string
 
 const (
-	LevelInfo     MOTDLevel = 2
-	LevelWarning  MOTDLevel = 1
-	LevelCritical MOTDLevel = 0
+	LevelInfo     MOTDLevel = "info"
+	LevelWarning  MOTDLevel = "warn"
+	LevelCritical MOTDLevel = "crit"
 )
+
+func (l MOTDLevel) Int() int {
+	switch l {
+	case LevelCritical:
+		return 0
+	case LevelWarning:
+		return 1
+	case LevelInfo:
+		return 2
+	default:
+		log.Printf("%v is an invalid MOTDLevel", l)
+		return 0
+	}
+}
 
 type MOTDItem struct {
 	Projects  map[string]bool `json:"projects,omitempty" yaml:"projects,omitempty"`
@@ -46,9 +60,9 @@ func (m MOTDItems) Filter(projects []string, level MOTDLevel) MOTDItems {
 			}
 			continue
 		}
-		if item.Level > level {
+		if item.Level.Int() > level.Int() {
 			if args.debug {
-				log.Printf("Skipping item %s because it is below the level threshold", item.Item.Title)
+				log.Printf("Skipping item %s because it (%d) is below the level threshold (%d)", item.Item.Title, item.Level.Int(), level.Int())
 			}
 			continue
 		}
