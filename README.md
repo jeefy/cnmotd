@@ -21,7 +21,7 @@ A unified message bus for CNCF projects to use for notifying users of changes or
       email: community@kubernetes.io
 ```
 
-This will generate an ATOM Feed that can be queried/customized for consumption across all CNCF projects.
+This will generate an ATOM Feed that can be queried/customized for consumption across all CNCF projects
 
 ## Fields
 
@@ -49,12 +49,21 @@ This will generate an ATOM Feed that can be queried/customized for consumption a
 
 ## CLI Consumption Example
 
-There is a client/consumption example in [examples/client.go](examples/client.go). 
+There is a client/consumption example in [examples/client.go](examples/client.go)
 
-This parses the published feed and outputs color coded and parseable info.
+This parses the published feed and outputs color coded and parseable info
 
 ```
 -- Cloud Native Notices --
 CRIT - Update k8s.gcr.io to use registry.k8s.io - https://registry.k8s.io
 -- /motd.cncf.io/ --
 ```
+
+### Consumption Recommendations
+
+- **The Most Important Rule:** 
+  
+  Never block on the MOTD service. If it's unreachable or returning invalid data, shrug and move on. This is meant to supplement CNCF projects, but we don't want to potentially compromise trust in our projects because the MOTD service isn't available
+- Allow users to specify their own `projects` and `level`, but default to `critical` and your project name
+- Allow users to specify the URL of the CNMOTD instance, but please default to `https://motd.cncf.io`
+- Allow users to skip-or-hide MOTD output. This is especially helpful for CLI-clients that get heavily scripted against
