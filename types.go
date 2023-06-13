@@ -32,8 +32,8 @@ func (l MOTDLevel) Int() int {
 type MOTDItem struct {
 	Projects  map[string]bool `json:"projects,omitempty" yaml:"projects,omitempty"`
 	Level     MOTDLevel       `json:"level,omitempty" yaml:"level"`
-	StartDate time.Time       `json:"start_date,omitempty" yaml:"startDate"`
-	EndDate   time.Time       `json:"end_date,omitempty" yaml:"endDate,omitempty"`
+	StartDate time.Time       `json:"start_date,omitempty" yaml:"startDate,omitempty"`
+	EndDate   time.Time       `json:"end_date,omitempty" yaml:"endDate"`
 	Item      feeds.Item      `json:"item" yaml:"item"`
 }
 

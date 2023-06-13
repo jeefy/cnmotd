@@ -3,7 +3,6 @@
   level: crit
   endDate: 2023-09-01 00:00:00
   item:
-    category: deprecation
     title: Update k8s.gcr.io to use registry.k8s.io
     link:
       href: https://registry.k8s.io

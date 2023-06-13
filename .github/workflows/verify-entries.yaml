@@ -9,7 +9,7 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    name: Check that the landscape.yml is syntactically correct
+    name: Check that MOTD YAML files in entries are valid
     steps:
       - uses: actions/checkout@v3
       - name: Setup go
