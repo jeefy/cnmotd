@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -19,6 +18,7 @@ var Cmd = &cobra.Command{
 
 var args struct {
 	debug        bool
+	validate     bool
 	entryDir     string
 	cacheDir     string
 	maxCacheAge  int
@@ -63,6 +63,13 @@ func init() {
 		"Enable debug logging",
 	)
 
+	flags.BoolVar(
+		&args.validate,
+		"validate",
+		false,
+		"Run a vlidation check on the entries",
+	)
+
 	flags.StringVar(
 		&args.cronSchedule,
 		"cron-schedule",
@@ -90,14 +97,18 @@ func run(cmd *cobra.Command, argv []string) error {
 
 	log.Println("Starting CNMOTD!")
 
-	if args.debug {
-		go func() {
-			log.Println("Starting pprof server on port 6060")
-			log.Println(http.ListenAndServe(":6060", nil))
-		}()
+	errors := LoadFeed()
+	if args.validate {
+		if len(errors) > 0 {
+			log.Println("Errors found:")
+			for _, err := range errors {
+				log.Println(err)
+			}
+			os.Exit(1)
+		}
+		log.Println("No errors found")
+		os.Exit(0)
 	}
-
-	LoadFeed()
 
 	StartCron()
 	StartMetrics()
